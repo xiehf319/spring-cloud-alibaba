@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 the original author or authors.
+ * Copyright 2013-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.alibaba.cloud.dubbo.http.matcher;
 
 import org.junit.Assert;
 import org.junit.Test;
+
 import org.springframework.http.MediaType;
 
 /**
- * {@link ConsumeMediaTypeExpression} Test
+ * {@link ConsumeMediaTypeExpression} Test.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
@@ -31,15 +33,16 @@ public class ConsumeMediaTypeExpressionTest
 	public void testMatch() {
 		ConsumeMediaTypeExpression expression = createExpression(MediaType.ALL_VALUE);
 
-		Assert.assertTrue(expression.match(MediaType.APPLICATION_JSON_UTF8));
+		Assert.assertTrue(expression.match(MediaType.APPLICATION_JSON));
 
 		expression = createExpression(MediaType.APPLICATION_JSON_VALUE);
-		Assert.assertTrue(expression.match(MediaType.APPLICATION_JSON_UTF8));
+		Assert.assertTrue(expression.match(MediaType.APPLICATION_JSON));
 
 		expression = createExpression(MediaType.APPLICATION_JSON_VALUE + ";q=0.7");
-		Assert.assertTrue(expression.match(MediaType.APPLICATION_JSON_UTF8));
+		Assert.assertTrue(expression.match(MediaType.APPLICATION_JSON));
 
 		expression = createExpression(MediaType.TEXT_HTML_VALUE);
-		Assert.assertFalse(expression.match(MediaType.APPLICATION_JSON_UTF8));
+		Assert.assertFalse(expression.match(MediaType.APPLICATION_JSON));
 	}
+
 }

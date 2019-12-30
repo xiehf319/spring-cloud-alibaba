@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 the original author or authors.
+ * Copyright 2013-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.alibaba.cloud.sentinel.datasource.converter.JsonConverter;
 import com.alibaba.cloud.sentinel.datasource.converter.XmlConverter;
 import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition;
@@ -34,7 +29,6 @@ import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPathPredicateItem;
 import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateGroupItem;
 import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateItem;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -46,19 +40,25 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 /**
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(name = "spring.cloud.sentinel.enabled", matchIfMissing = true)
 public class SentinelGatewayAutoConfiguration {
 
 	@ConditionalOnClass(ObjectMapper.class)
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	protected static class SentinelConverterConfiguration {
 
 		static class ApiPredicateItemDeserializer
 				extends StdDeserializer<ApiPredicateItem> {
+
 			private Map<String, Class<? extends ApiPredicateItem>> registry = new HashMap<String, Class<? extends ApiPredicateItem>>();
 
 			ApiPredicateItemDeserializer() {
@@ -90,9 +90,10 @@ public class SentinelGatewayAutoConfiguration {
 				}
 				return mapper.readValue(root.toString(), apiPredicateItemClass);
 			}
+
 		}
 
-		@Configuration
+		@Configuration(proxyBeanMethods = false)
 		protected static class SentinelJsonConfiguration {
 
 			private ObjectMapper objectMapper = new ObjectMapper();
@@ -122,10 +123,11 @@ public class SentinelGatewayAutoConfiguration {
 			public JsonConverter jsonApiConverter() {
 				return new JsonConverter(objectMapper, ApiDefinition.class);
 			}
+
 		}
 
 		@ConditionalOnClass(XmlMapper.class)
-		@Configuration
+		@Configuration(proxyBeanMethods = false)
 		protected static class SentinelXmlConfiguration {
 
 			private XmlMapper xmlMapper = new XmlMapper();
@@ -156,6 +158,7 @@ public class SentinelGatewayAutoConfiguration {
 			}
 
 		}
+
 	}
 
 }
